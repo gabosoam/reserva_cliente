@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="card ">
+      <div class="card-header text-white bg-primary">
+        Em espera de producción
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+          <ng-container *ngFor="let tarea of tareas" class="card  ">
+            <div class=" col-md-6 mb-1" *ngIf="tarea.estado==1">
+
+             
+              <div class="card-body  postit">
+                  <small> <strong>Servicio:</strong> {{tarea.producto}}</small><br>
+                <small> <strong>Operador:</strong> {{tarea.nombre}}</small>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <div class="card text-white bg-warning">
+      <div class="card-header ">
+        En producción
+      </div>
+      <div class="card-body">
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <div class="card text-white bg-success">
+      <div class="card-header ">
+        Finalizadas
+      </div>
+      <div class="card-body">
+
+      </div>
+    </div>
+  </div>
+
+</div>

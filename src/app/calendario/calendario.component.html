@@ -1,0 +1,127 @@
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div>
+
+      <table class="table table-sm table-bordered">
+        <tbody>
+
+          <tr *ngIf="modalData.event.meta.info">
+            <th>Orden de trabajo:</th>
+            <td>
+              <a target="_blank" [routerLink]="['/admin/orden/'+modalData.event.meta.info.orden]">OT-{{ modalData?.event.meta.info.orden}}</a>
+            </td>
+          </tr>
+          <tr *ngIf="modalData.event.meta.info">
+            <th>Operador:</th>
+            <td>
+
+              <select class="form-control"  [(ngModel)]="modalData.event.meta.user" (change)="handleEvent('',modalData.event);refresh.next()">
+                <option *ngFor="let user of users" [(ngValue)]="user">{{user.name}}</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr *ngIf="modalData.event.meta.info">
+            <th>Servicio/Variante:</th>
+            <td>{{ modalData?.event.meta.info.producto}}/{{ modalData?.event.meta.info.variante}}</td>
+          </tr>
+
+          <tr >
+            <th>Hora de inicio estimada:</th>
+            <td>
+               <input
+              class="form-control"
+              type="text"
+              mwlFlatpickr
+              [(ngModel)]="modalData.event.start"
+              (ngModelChange)="handleEvent('',modalData.event);refresh.next()"
+              [altInput]="true"
+              [convertModelValue]="true"
+              [enableTime]="true"
+              dateFormat="Y-m-dTH:i"
+              altFormat="F j, Y H:i"
+              placeholder="Not set"
+      
+            />
+          </td>
+          </tr>
+
+          <tr>
+            <th>Hora de finalización estimada:</th>
+            <td>
+                {{ modalData?.event.end  | date : 'yyyy-MM-dd HH:mm'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+        Anterior
+      </div>
+      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+        Hoy
+      </div>
+      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+        Siguiente
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'es-EC':weekStartsOn:excludeDays:startOfDay }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div class="btn btn-primary" (click)="view = CalendarView.Month" [class.active]="view === CalendarView.Month">
+        Mes
+      </div>
+      <div class="btn btn-primary" (click)="view = CalendarView.Week" [class.active]="view === CalendarView.Week">
+        Semana
+      </div>
+      <div class="btn btn-primary" (click)="view = CalendarView.Day" [class.active]="view === CalendarView.Day">
+        Día
+      </div>
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+
+  <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [excludeDays]="excludeDays"
+    [events]="events" [locale]="'es-EC'" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="seleccionar('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view [locale]="'es-EC'" *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+    [excludeDays]="excludeDays" [refresh]="refresh" (hourSegmentClicked)="ver($event)" [dayStartHour]="8" [dayEndHour]="17" (eventClicked)="seleccionar('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)" (beforeViewRender)="hourSegmentModifierMonth($event)">
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view *ngSwitchCase="CalendarView.Days" [viewDate]="viewDate" [locale]="'es-EC'" [events]="events"
+    [dayStartHour]="8" [dayEndHour]="17" [refresh]="refresh" (eventClicked)="seleccionar('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)" >
+  </mwl-calendar-day-view>
+
+  <mwl-day-view-scheduler *ngSwitchCase="CalendarView.Day" (hourSegmentClicked)="ver($event)" [viewDate]="viewDate" [locale]="'es-EC'" [events]="events"
+    [dayStartHour]="8" [dayEndHour]="17" [refresh]="refresh" (eventTimesChanged)="eventTimesChanged($event)"
+    (eventClicked)="seleccionar('Clicked', $event.event)" [hourSegments]="2" (userChanged)="userChanged($event)" (beforeViewRender)="hourSegmentModifier($event)" >
+  </mwl-day-view-scheduler>
+</div>
+
+

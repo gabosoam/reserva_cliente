@@ -1,0 +1,136 @@
+<ng-container *ngIf="questions">
+  <div class="card" [ngbCollapse]="!isCollapsed">
+    <div class="card-header">
+
+
+      <div class="btn-group float-right">
+        <button type="button" class="btn  btn-primary" (click)="cambiarUrl('nuevo')">
+          <i class="fa fa-plus"></i>
+        </button>
+
+        <a type="button" class="btn  btn-success" [routerLink]="['/admin/'+apiBase.url+'/nuevo']">
+          <i class="fa fa-file-excel"></i>
+
+        </a>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <label for="txtBuscar">Filtro</label>
+          <input style="max-width: 250px;" #txtBuscar type="text" class="form-control form-control-sm" [(ngModel)]="filtroBusqueda"
+            (change)="obtenerDatos()" placeholder="Buscar...">
+        </div>
+        <ng-container class="" *ngFor="let columna of questions">
+          <ng-container class="form" [formGroup]="formBusqueda">
+
+            <div class="form-group col-md-3" *ngIf="columna.controlType == 'dropdown'">
+
+              <label for="{{columna.key}}">{{columna.label}}</label>
+              <select class="form-control form-control-sm" id="{{columna.key}}" [formControlName]="columna.key"
+                (change)="obtenerDatos()">
+                <option value="todos">Todos</option>
+                <option *ngFor="let opcion of columna.options" value="{{opcion.key}}">{{opcion.value}}</option>
+              </select>
+            </div>
+
+
+
+
+
+          </ng-container>
+        </ng-container>
+        <div class="col-md-2">
+          <label for="selectLimit">Elementos</label>
+          <select id="selectLimit" class="form-control form-control-sm" [(ngModel)]="limite" (change)="obtenerDatos()">
+            <option value="5">5 elementos</option>
+            <option value="10">10 elementos</option>
+            <option value="20">20 elementos</option>
+            <option value="40">40 elementos</option>
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+      </div>
+
+      <hr>
+      <div class="table-responsive">
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center" *ngFor="let question of questions">{{question.label}}</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let elemento of data; let i = index" class="animated fadeIn">
+              <th class="text-center" scope="row">
+                <ng-container *ngIf="limite=='todos'">
+                  {{i+1}}
+                </ng-container>
+
+                <ng-container *ngIf="limite!='todos'">
+                  {{(pagina*limite)- (limite-1) + i}}
+                </ng-container>
+
+              </th>
+              <td class="text-center" *ngFor="let question of questions">
+                <select style="-moz-appearance: none; -webkit-appearance: none; appearance: none; max-width: 100px;"
+                  disabled class="form-control-plaintext form-control-sm" *ngIf="question.controlType == 'dropdown'"
+                  [(ngModel)]=" elemento[question.key]">
+                  <option *ngFor="let option of question.options" value="{{option.key}}">{{option.value}}</option>
+                </select>
+                <p *ngIf="question.controlType == 'dropdown'">
+
+                </p>
+                <ng-container *ngIf="question.controlType == 'textbox'">
+
+
+                  {{elemento[question.key]}}
+                </ng-container>
+
+                <ng-container *ngIf="question.controlType == 'image'">
+
+                  <img src="{{elemento[question.key]}}" style="width: 100px" alt="">
+
+                </ng-container>
+
+
+
+              </td>
+
+              <td class="text-center">
+                <div class="btn-group">
+
+                  <button class="btn btn-sm btn-primary" (click)="cambiarUrl(elemento.id)"><i class="icon-pencil"></i></button>
+
+                  <button class="btn btn-sm btn-danger" mwlConfirmationPopover [cancelText]="'Cancelar'" [confirmText]="'Confirmar'"
+                    [popoverTitle]="'Eliminar elemento'" [popoverMessage]="'Desea eliminar el elemento?'" placement="left"
+                    (confirm)="eliminarElemento(elemento, i)" (cancel)="cancelClicked = true">
+                    <i class="icon-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+
+
+      <ngb-pagination class="d-flex justify-content-center" [(collectionSize)]="collectionSize" [(page)]="pagina"
+        [(pageSize)]="limite" (pageChange)="obtenerDatos()"></ngb-pagination>
+      <p class="d-flex justify-content-center">Total datos: {{collectionSize}}</p>
+
+
+    </div>
+  </div>
+
+
+
+
+
+</ng-container>

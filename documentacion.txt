@@ -1,0 +1,2 @@
+Para comprobar token
+npm install --save @auth0/angular-jwt

@@ -1,0 +1,32 @@
+<div [formGroup]="form" class="">
+  <div class="form-group">
+
+    <div class="row">
+      <div class="col-md-4 text-right">
+        <label [attr.for]="question.key" class=" col-form-label ">{{question.label}}:</label>
+      </div>
+      <div class="col-md-6">
+
+        <div [ngSwitch]="question.controlType">
+
+          <input *ngSwitchCase="'textbox'" class="form-control form-control-sm" [formControlName]="question.key" [id]="question.key"
+            [type]="question.type">
+
+          <select [id]="question.key" *ngSwitchCase="'dropdown'" class="form-control form-control-sm" [formControlName]="question.key">
+            <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
+          </select>
+
+        </div>
+        <small class="text-danger"  *ngIf="!isValid">{{question.key}} requerido</small>
+
+      </div>
+    </div>
+
+
+
+
+
+
+  </div>
+
+</div>

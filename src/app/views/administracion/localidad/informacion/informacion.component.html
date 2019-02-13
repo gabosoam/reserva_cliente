@@ -1,0 +1,24 @@
+<div class="animated fadeIn">
+  <app-formulario [questions]="questions" [apiBase]="apiBase" [id]="id" (guardar)="obtenerDatos($event)"></app-formulario>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Foto</div>
+      <div class="card-body">
+      <img *ngIf="localidad.foto" src="{{localidad.foto}}" style="width: 100%" alt="">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Ubicación</div>
+      <div class="card-body">
+  
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,29 @@
+<div id="collapseExample" [ngbCollapse]="isCollapsed">
+  <div class="card">
+    <div class="card-header">
+      <div class="btn-group float-right">
+       <button class="btn btn-primary" (click)="editar()" [disabled]="!form.valid"><i class="fa fa-save"></i></button>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="row">
+        <div class="col-md-6">
+            <form (ngSubmit)="editar()" [formGroup]="form">
+
+                <div class="form">
+                  <ng-container *ngFor="let question of questions">
+                    <app-question [question]="question" [form]="form" class=""></app-question>
+        
+                  </ng-container>
+                </div>
+        
+              </form>
+        </div>
+      </div>
+
+
+    
+    </div>
+  </div>
+</div>
